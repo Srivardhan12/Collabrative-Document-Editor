@@ -26,33 +26,6 @@ function App() {
   const quillRef = useRef<Quill | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const skipUpdateRef = useRef(false);
-  const [mousePoistion, setMousePoistion] = useState({x:0, y:0})
-
-  window.onmousemove = (e:MouseEvent) => {
-    setTimeout(() => {}, 1000);
-    setMousePoistion({x:e.clientX, y:e.clientY})
-    const newSocketForCursor = new WebSocket('ws://localhost:8081');
-    newSocketForCursor.onopen = () => {
-      console.log('WebSocket connection established for cursor');
-      const poistion = JSON.stringify(mousePoistion);
-      newSocketForCursor.send(poistion)
-    };
-    newSocketForCursor.onmessage = (cursorPoistion) => {
-      console.log("data recived for cursor")
-      const receivedMessage = cursorPoistion.data;
-      const newMousePoistion = JSON.parse(receivedMessage);
-      setMousePoistion(newMousePoistion)
-      console.log(newMousePoistion)
-    };
-    newSocketForCursor.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-    newSocketForCursor.onerror = (error) => {
-      console.error('WebSocket error', error);
-    };
-
-    // socketRef.current = newSocketForCursor;
-    }
 
   const initEditor = useCallback(() => {
     if (wrapperRef.current == null) return;
@@ -110,7 +83,6 @@ function App() {
   return (
     <div>
       <div className='container' ref={wrapperRef}></div>
-      <div className='cursor' style={{top:`${mousePoistion.x}`,bottom:`${mousePoistion.y}`}}></div>
     </div>
   );
 }
