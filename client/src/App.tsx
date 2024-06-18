@@ -17,7 +17,7 @@ const TOOLBAR_OPTIONS = [
   [{ 'color': [] }, { 'background': [] }],
   [{ 'font': [] }],
   [{ 'align': [] }],
-  ['clean']
+  ['clean'],
 ];
 
 function App() {
