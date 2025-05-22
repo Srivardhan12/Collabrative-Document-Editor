@@ -33,7 +33,7 @@ function App() {
     const editorElement = document.createElement('div');
     wrapperRef.current.append(editorElement);
     const quill = new Quill(editorElement, { theme: 'snow', modules: { toolbar: TOOLBAR_OPTIONS } });
-    
+
     quill.on('text-change', () => {
       if (skipUpdateRef.current) {
         skipUpdateRef.current = false;

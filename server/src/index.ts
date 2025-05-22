@@ -1,21 +1,21 @@
-import express from 'express'
-import { WebSocketServer, WebSocket } from 'ws'
+import WebSocket, { WebSocketServer } from 'ws';
 
-const app = express()
-const httpServer = app.listen(8080)
+const wss = new WebSocketServer({ port: 8080 });
 
-const wss = new WebSocketServer({ server: httpServer });
+wss.on('connection', (socket: WebSocket) => {
+  console.log('Client connected');
 
-wss.on('connection', function connection(ws) {
-  ws.on('error', console.error);
-
-  ws.on('message', function message(data, isBinary) {
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(data, { binary: isBinary });
+  socket.on('message', (message) => {
+    wss.clients.forEach((client) => {
+      if (client !== socket && client.readyState === WebSocket.OPEN) {
+        client.send(message);
       }
     });
   });
+
+  socket.on('close', () => {
+    console.log('Client disconnected');
+  });
 });
 
-console.log("Listining to port 5173")
+console.log('WebSocket server running on ws://localhost:8080');
